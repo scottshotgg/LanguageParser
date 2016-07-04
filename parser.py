@@ -1,20 +1,39 @@
+# this should be renamed tokenizer
+
 import enchant
 
 englishDictionary = enchant.Dict("en_US")
 
-terminals = {'.': '<PERIOD>', '!': '<EXCLAMATION_POINT>', '?': 'QUESTION_MARK'}
-nonterms = {'$': '<DOLLAR_SIGN>'}
+terminals = {'.': '<PERIOD>', '!': '<EXCLAMATION_POINT>', '?': '<QUESTION_MARK>'}
+
+nonterms = {':': ['<COLON>', 18], ';': ['<SEMI_COLON>', 19], ',': ['<COMMA>', 20], '@': '<AT_SIGN>', '#': '<POUND_SIGN>', '%': '<PERCENT_SIGN>',
+			'$': '<DOLLAR_SIGN>', '^': '<CARET>', '&': '<AMPERSAND>', '*': '<ASTERISK>', '(': '<STARTING_PAREN>', ')': '<ENDING_PAREN>', 
+			'\\': 'BACK_SLASH', '/': 'FORWARD_SLASH', '{': 'LEFT_CURLY_BRACE', '}': 'RIGHT_CURLY_BRACE', '<': 'LESS_THAN', 
+			'>': '<GREATER_THAN>', '-': '<MINUS>', '_': '<UNDERSCORE>', '+': '<PLUS>', '=': '<EQUALS>', '[': '<LEFT_SQUARE_BRACKET>', 
+			']': '<RIGHT_SQUARE_BRACKET>', '|': '<LINE_SEPERATOR>'}
+
 whitespace = {'	': '<TAB>', ' ': '<SPACE>', '\n': '<NEWLINE>'}
-singlecharwords = ['a', 'i']
+
+singlecharwords = ['a', 'i', 'A', 'I']
 
 word = ""
 
+# this needs to be added into a string and then detected afterwards when a space hits
+# IF a letter comes aferwards then we need to add it to the word based on what letter we think it is
+# 	unless its an f, then we assume they are talking about a float var until we see another letter
+# IF a period comes along we need to assume that it is a period or a decimal point and interpolate afterwards
+number = ""
+
 print
 
-for char in "this	is a c00l \nstring $.!":
+for char in "	This is a cool string, and I made it all by myself.":
 
 	if char.isalpha():
-		print "<LETTER>"
+		if char.isupper():
+			print "<CAPITAL><LETTER>"
+		else:
+			print "<LETTER>"
+
 		word += char
 
 	elif char.isdigit():
@@ -28,7 +47,7 @@ for char in "this	is a c00l \nstring $.!":
 			else:
 				print "Found word: " + word
 		word = ""
-		print whitespace[char]
+		print "<WHITE_SPACE>" + whitespace[char]
 
 	elif char in terminals:
 		if len(word) > 0 and englishDictionary.check(word):
@@ -41,7 +60,7 @@ for char in "this	is a c00l \nstring $.!":
 		print "End sentence"
 
 	elif char in nonterms:
-		print nonterms[char]
+		print "<NON-TERMINAL>", nonterms[char][0]
 
 	else:
 		nonterms[char] = char
