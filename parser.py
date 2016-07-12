@@ -3,6 +3,37 @@
 import enchant
 
 englishDictionary = enchant.Dict("en_US")
+#b = enchant.Broker()
+#b.set_ordering("en_US","myspell, aspell")
+#print b.describe()
+#englishDictionary = b.request_dict("en_US")
+#print englishDictionary.provider
+#print englishDictionary.check("run")
+
+
+wordy = "fuming"
+wordyRoot = ""
+
+if wordy[-3:] == "ing":
+	wordyStrip = wordy[:-3]
+	wordyCheck = englishDictionary.check(wordyStrip)
+	print wordyStrip, wordyCheck
+
+	if not wordyCheck:
+		if wordyStrip[-2:-1] == wordyStrip[-1:]:
+			wordyFall = wordyStrip[:-1]
+			wordyFallCheck = englishDictionary.check(wordyFall)
+			print wordyFall, wordyFallCheck
+			wordyRoot = wordyFallCheck
+		elif englishDictionary.check(wordyStrip + "e"):
+			print "we got it"
+
+
+
+
+
+
+
 
 terminals = {'.': '<PERIOD>', '!': '<EXCLAMATION_POINT>', '?': '<QUESTION_MARK>'}
 
@@ -18,6 +49,7 @@ singlecharwords = ['a', 'i', 'A', 'I']
 
 word = ""
 
+
 # this needs to be added into a string and then detected afterwards when a space hits
 # IF a letter comes aferwards then we need to add it to the word based on what letter we think it is
 # 	unless its an f, then we assume they are talking about a float var until we see another letter
@@ -26,11 +58,11 @@ number = ""
 
 print
 
-for char in "	This is a cool string, and I made it all by myself.":
+for char in "	This is a cool string, and I made it all by myself.?!":
 
 	if char.isalpha():
 		if char.isupper():
-			print "<CAPITAL><LETTER>"
+			print "<LETTER><CAPITAL>"
 		else:
 			print "<LETTER>"
 
@@ -57,7 +89,6 @@ for char in "	This is a cool string, and I made it all by myself.":
 				print "Found word: " + word
 		word = ""
 		print "<TERMINAL>" + terminals[char]
-		print "End sentence"
 
 	elif char in nonterms:
 		print "<NON-TERMINAL>", nonterms[char][0]
