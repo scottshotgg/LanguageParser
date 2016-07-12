@@ -3,15 +3,8 @@
 import enchant
 
 englishDictionary = enchant.Dict("en_US")
-#b = enchant.Broker()
-#b.set_ordering("en_US","myspell, aspell")
-#print b.describe()
-#englishDictionary = b.request_dict("en_US")
-#print englishDictionary.provider
-#print englishDictionary.check("run")
 
-
-wordy = "fuming"
+wordy = "mas"
 wordyRoot = ""
 
 if wordy[-3:] == "ing":
@@ -26,7 +19,13 @@ if wordy[-3:] == "ing":
 			print wordyFall, wordyFallCheck
 			wordyRoot = wordyFallCheck
 		elif englishDictionary.check(wordyStrip + "e"):
-			print "we got it"
+			print wordyStrip + "e"
+			wordyRoot = wordyStrip + "e"
+
+elif wordy[-1:] == "s" and len(wordy) > 3:
+	print wordy[:-1]
+	if englishDictionary.check(wordy[:-1]):
+		print "ur mum"
 
 
 
